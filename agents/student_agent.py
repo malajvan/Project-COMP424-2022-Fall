@@ -4,6 +4,30 @@ from store import register_agent
 import sys
 
 
+'''
+Game plan: Use **Monte Carlo Tree Search**
+1. Selection:
+    Choose a starting node from the root (current position)
+    Tree policy: UCT?
+2. Expansion:
+    Select a child (C)
+3. Simulation:
+    Run simulation from C til there's the end of the game (the rest of playout is random)
+    Method:
+        * Can we use random_agent.py to run the simulation?
+4. Backpropagation:
+    Update current move sequence with the result from the simulation
+** Note: Value: #of tiles we earn?
+
+How to implement tree search:
+1. should we implement a class? (prob not)
+2. Just work w numpy
+    * Select a child step (for Selection and Expansion): create a function that list out ALL possible next moves from current move?
+    * For simulation utilize random_agent.py and get results to backpropagate
+    * Back propagate: "https://www.analyticsvidhya.com/blog/2019/01/monte-carlo-tree-search-introduction-algorithm-deepmind-alphago/"
+        + each child has 2 values to update: t: value of simulation roll out ; n: number of times visited this node. (honestly should use a class structure for this haha)
+'''
+
 @register_agent("student_agent")
 class StudentAgent(Agent):
     """
