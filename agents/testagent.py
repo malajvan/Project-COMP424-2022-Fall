@@ -1,17 +1,19 @@
 import numpy as np
+import math
 class MCnodes: # check https://github.com/hayoung-kim/mcts-tic-tac-toe/blob/master/VanilaMCTS.py
-        def __init__(self,my_pos,barrier_dir,adv_pos,value=0,n=0,tree=None,chess_board=None):
+        def __init__(self,my_pos,barrier_dir,adv_pos,root=None,value=0,n=0,chess_board=None,visited=0):
             """
             Initialize the nodes for Monte Carlo Tree Search
             """
             # logger.info(f"Initializing node {move}")
-
+            self.barrier_dir=barrier_dir
             self.value=value
             self.n=n
             self.chess_board=chess_board
             self.my_pos=my_pos
             self.adv_pos=adv_pos
             self.moves=((-1, 0), (0, 1), (1, 0), (0, -1))
+            self.children=[]
             # if tree==None:
             #     self.tree=self.create_tree()
 
@@ -82,7 +84,26 @@ class MCnodes: # check https://github.com/hayoung-kim/mcts-tic-tac-toe/blob/mast
                         continue
                     if self.is_valid_child((m,d)):
                         children.append((m,d))
-            return(children) #need to first make them nodes and link them in tree but tested seems ok
+            for c in children:
+                m,d=c
+                child=MCnodes(m,d,self.adv_pos,root=self,chess_board=self.chess_board)
+                self.children.append(child)
+            return None#self.children #need to first make them nodes and link them in tree but tested seems ok
+        
+        
+        def selection(self):
+            """
+            Perform selection based on UCT Q*(s,a)=Q(s,a)+2*sqrt(log(n(s))/n(s,a))
+            """
+            max_child=self.children[0]
+            max_uct=max_child.value+2*math.sqrt(math.log(max_child.visted))
+            for c in self.children:
+                c_uct=c.value+2*math.sqrt(math.log(c.visted))
+                if c_uct>max_uct:
+                    max_uct=c_uct
+                    max_child=c
+            return max_child
+
 
 def main():
     c=np.zeros((4,4,4),dtype=bool)
@@ -92,8 +113,9 @@ def main():
     c[:, -1, 1] = True
     c[:, -1, 1] = True
     c[0,2,2]=True
-
-    print(n1.get_children())
+    n1=MCnodes((0,0),2,(1,1),0,0,chess_board=c)
+    n1.get_children()
+    print(n1.children)
 
 
 main()
