@@ -14,6 +14,7 @@ class MCnodes: # check https://github.com/hayoung-kim/mcts-tic-tac-toe/blob/mast
             self.adv_pos=adv_pos
             self.moves=((-1, 0), (0, 1), (1, 0), (0, -1))
             self.children=[]
+            self.visited=visited
             # if tree==None:
             #     self.tree=self.create_tree()
 
@@ -38,15 +39,14 @@ class MCnodes: # check https://github.com/hayoung-kim/mcts-tic-tac-toe/blob/mast
                 cur_pos, cur_step = state_queue.pop(0)
                 r, c = cur_pos
                 if cur_step == k:
-                    if(r,c)==(1,1):
-                        print("hi")
                     break
-                for dir, move in enumerate(self.moves):
+                for dir, m in enumerate(self.moves):
                     if self.chess_board[r, c, dir]:
                         continue
 
-                    next_pos = (cur_pos[0] + move[0],cur_pos[1]+move[1])
+                    next_pos = (cur_pos[0] + m[0],cur_pos[1]+m[1])
                     if (pos==adv_pos) or tuple(next_pos) in visited:
+                        
                         continue
                     if (pos==next_pos):
                         is_reached = True
@@ -88,17 +88,25 @@ class MCnodes: # check https://github.com/hayoung-kim/mcts-tic-tac-toe/blob/mast
                 m,d=c
                 child=MCnodes(m,d,self.adv_pos,root=self,chess_board=self.chess_board)
                 self.children.append(child)
-            return None#self.children #need to first make them nodes and link them in tree but tested seems ok
-        
+            return None
         
         def selection(self):
             """
             Perform selection based on UCT Q*(s,a)=Q(s,a)+2*sqrt(log(n(s))/n(s,a))
             """
             max_child=self.children[0]
-            max_uct=max_child.value+2*math.sqrt(math.log(max_child.visted))
+            if max_child.visited==0:
+                max_uct=max_child.value+4*math.sqrt(math.log(1)/1e-100)
+            else:
+                max_uct=max_child.value+4*math.sqrt(math.log(1)/max_child.visited)
             for c in self.children:
-                c_uct=c.value+2*math.sqrt(math.log(c.visted))
+                if c.visited ==0:
+                    c_uct=c.value+4*math.sqrt(math.log(1)/0.000001)
+                else:
+                    c_uct=c.value+4*math.sqrt(math.log(1)/0.0000001)
+
+
+                print(c_uct,c.my_pos,c.barrier_dir)
                 if c_uct>max_uct:
                     max_uct=c_uct
                     max_child=c
@@ -106,16 +114,16 @@ class MCnodes: # check https://github.com/hayoung-kim/mcts-tic-tac-toe/blob/mast
 
 
 def main():
-    c=np.zeros((4,4,4),dtype=bool)
+    c=np.zeros((2,2,4),dtype=bool)
     c[0, :, 0] = True
     c[:, 0, 3] = True
     c[-1, :, 2] = True
     c[:, -1, 1] = True
     c[:, -1, 1] = True
-    c[0,2,2]=True
+    # c[0,0,2]=True
     n1=MCnodes((0,0),2,(1,1),0,0,chess_board=c)
     n1.get_children()
-    print(n1.children)
+
 
 
 main()
