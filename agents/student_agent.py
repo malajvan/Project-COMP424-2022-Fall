@@ -6,7 +6,7 @@ import sys
 import logging
 
 '''
-Game plan: Use **Monte Carlo Tree Search**
+Old Game plan: Use **Monte Carlo Tree Search**
 1. Selection:
     Choose a starting node from the root (current position)
     Tree policy: UCT?
@@ -21,13 +21,25 @@ Game plan: Use **Monte Carlo Tree Search**
 ** Note: Value: #of tiles we earn?
 
 How to implement tree search:
-1. should we implement a class? 
+1. should we implement a class? Yes
 2. Just work w numpy
     * Select a child step (for Selection and Expansion): create a function that list out ALL possible next moves from current move?
     * For simulation utilize random_agent.py and get results to backpropagate
     * Back propagate: "https://www.analyticsvidhya.com/blog/2019/01/monte-carlo-tree-search-introduction-algorithm-deepmind-alphago/"
         + each child has 2 values to update: t: value of simulation roll out ; n: number of times visited this node. (honestly should use a class structure for this haha)
 '''
+"""
+NEW game plan: Chasing algorithm (https://www.rebellionresearch.com/what-is-monte-carlo-tree-search-used-for )
+* find best children (closest to the oponent)
+* grade them : 
+    heuristics: closer to center
+                barrier towards oponent
+* if any of them make us win -> auto choose
+                 make us loose -> yeet
+"""
+
+
+
 logger=logging.getLogger(__name__)
 @register_agent("student_agent")
 class StudentAgent(Agent):
