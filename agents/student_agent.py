@@ -276,5 +276,5 @@ class StudentAgent(Agent):
             bests=[n1.children[0]]
         pos=bests[0].my_pos
         d=bests[0].barrier_dir
-        print(time()-t_s)
+        # print(time()-t_s)
         return pos, d
