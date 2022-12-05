@@ -9,8 +9,8 @@ from time import time
 from copy import deepcopy
  
  
-@register_agent("student_agent")
-class StudentAgent(Agent):
+@register_agent("spaghetti_agent")
+class SpaAgent(Agent):
     """
     A dummy class for your implementation. Feel free to use this class to
     add any helper functionalities needed for your agent.
@@ -278,9 +278,9 @@ class StudentAgent(Agent):
         return state.super_parent_pid
  
     def __init__(self):
-        super(StudentAgent, self).__init__()
+        super(SpaAgent, self).__init__()
         self.autoplay = True
-        self.name = "StudentAgent"
+        self.name = "SpaAgent"
         self.dir_map = {
             "u": 0,
             "r": 1,
@@ -471,5 +471,5 @@ class StudentAgent(Agent):
         you want to put on.
         Please check the sample implementation in agents/random_agent.py or agents/human_agent.py for more details.
         """
-        print(time() - start_time)
+        # print(time() - start_time)
         return best_move[0], best_move[1]
